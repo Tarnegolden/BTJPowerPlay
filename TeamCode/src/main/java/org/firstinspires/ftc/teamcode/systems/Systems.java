@@ -3,9 +3,13 @@ package org.firstinspires.ftc.teamcode.systems;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 public class Systems {
-    public GrabSystem grabSystem;
+    public PumpSystem pumpSystem;
+    public DetectionSystem detectionSystem;
+    public ElevatorSystem elevatorSystem;
 
     public Systems(LinearOpMode opMode) {
-        grabSystem = new GrabSystem(opMode);
+        pumpSystem = new PumpSystem(opMode);
+        detectionSystem = new DetectionSystem(opMode);
+        elevatorSystem = new ElevatorSystem(opMode);
     }
 }
