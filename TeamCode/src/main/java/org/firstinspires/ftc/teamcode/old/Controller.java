@@ -1,13 +1,9 @@
-package org.firstinspires.ftc.teamcode.olf;
+package org.firstinspires.ftc.teamcode.old;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -17,7 +13,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @TeleOp(name = "SingleController", group = "BTJ")
-
 public class Controller extends LinearOpMode {
 
     //Controller ***************************************************************
@@ -87,7 +82,7 @@ public class Controller extends LinearOpMode {
     int maxElevatorHight = 3000;
     int minElevatorHight = 1;
     int targetHight = 0;
-    final int[] junctionsLevels = new int[] {0,1350,2150,2900};
+    final int[] junctionsLevels = new int[]{0, 1350, 2150, 2900};
 
     //Program variables*********************************************************
 
@@ -157,7 +152,7 @@ public class Controller extends LinearOpMode {
                 .build();
 
         readyToReleaseVibration = new Gamepad.RumbleEffect.Builder()
-                .addStep(1.0,1.0,250)
+                .addStep(1.0, 1.0, 250)
                 .build();
 
         //Controller************************************************************
@@ -229,44 +224,43 @@ public class Controller extends LinearOpMode {
             //     elevatorIsUp = false;
             // }
 
-            if(gamepad1.a && !aIsPressed ){
+            if (gamepad1.a && !aIsPressed) {
                 aIsPressed = true;
-                if(PUMPR.getPower() != 1){
+                if (PUMPR.getPower() != 1) {
                     PUMPR.setPower(1);
                     PUMPL.setPower(-1);
-                } else{
+                } else {
                     PUMPR.setPower(0);
                     PUMPL.setPower(0);
                 }
-            }else if(!gamepad1.a && aIsPressed){
+            } else if (!gamepad1.a && aIsPressed) {
                 aIsPressed = false;
             }
 
-            if(gamepad1.b && !bIsPressed){
+            if (gamepad1.b && !bIsPressed) {
                 bIsPressed = true;
-                if(PUMPR.getPower() != -1){
+                if (PUMPR.getPower() != -1) {
                     PUMPR.setPower(-1);
                     PUMPL.setPower(1);
-                }
-                else{
+                } else {
                     PUMPR.setPower(0);
                     PUMPL.setPower(0);
                 }
-            }else if(!gamepad1.b && bIsPressed){
+            } else if (!gamepad1.b && bIsPressed) {
                 bIsPressed = false;
             }
 
-            if(gamepad1.y && !yIsPressed) {
+            if (gamepad1.y && !yIsPressed) {
                 yIsPressed = true;
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        if (PumpDirectionChangerLeft.getPosition() == 0){
+                        if (PumpDirectionChangerLeft.getPosition() == 0) {
                             turnPump.setPosition(0);
                             sleep(400);
                             PumpDirectionChangerLeft.setPosition(1);
                             PumpDirectionChangerRight.setPosition(0);
-                        } else if (PumpDirectionChangerRight.getPosition() == 0){
+                        } else if (PumpDirectionChangerRight.getPosition() == 0) {
                             turnPump.setPosition(0.85);
                             sleep(400);
                             PumpDirectionChangerLeft.setPosition(0);
@@ -279,21 +273,20 @@ public class Controller extends LinearOpMode {
             }
 
 
-
-            if(gamepad1.x && !xIsPressed){
+            if (gamepad1.x && !xIsPressed) {
                 xIsPressed = true;
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        if (PumpDirectionChangerLeft.getPosition() == 0){
+                        if (PumpDirectionChangerLeft.getPosition() == 0) {
                             targetHight = 0;
                             setElevatorHeight(0);
                             turnPump.setPosition(0);
                             sleep(350);
                             PumpDirectionChangerLeft.setPosition(1);
                             PumpDirectionChangerRight.setPosition(0);
-                        } else if (PumpDirectionChangerRight.getPosition() == 0){
+                        } else if (PumpDirectionChangerRight.getPosition() == 0) {
                             targetHight = 3;
                             setElevatorHeight(3);
                             turnPump.setPosition(0.85);
@@ -305,45 +298,45 @@ public class Controller extends LinearOpMode {
                 }).start();
             }
 
-            if(!gamepad1.x && xIsPressed){
+            if (!gamepad1.x && xIsPressed) {
                 xIsPressed = false;
             }
 
 
-            if(gamepad1.dpad_left){
+            if (gamepad1.dpad_left) {
                 turnPump.setPosition(0.85);
             }
-            if(gamepad1.dpad_right){
+            if (gamepad1.dpad_right) {
                 turnPump.setPosition(0.17);
             }
-            if (gamepad1.dpad_up){
+            if (gamepad1.dpad_up) {
                 PumpDirectionChangerLeft.setPosition(1);
                 PumpDirectionChangerRight.setPosition(0);
             }
-            if (gamepad1.dpad_down){
+            if (gamepad1.dpad_down) {
                 PumpDirectionChangerLeft.setPosition(0);
                 PumpDirectionChangerRight.setPosition(1);
             }
 
-            if (Ilay.getDistance(DistanceUnit.CM) < 15 && Ilay.getDistance(DistanceUnit.CM) > 5 && elevatorLeft.getCurrentPosition() > minHightForJunctionIdentification){
+            if (Ilay.getDistance(DistanceUnit.CM) < 15 && Ilay.getDistance(DistanceUnit.CM) > 5 && elevatorLeft.getCurrentPosition() > minHightForJunctionIdentification) {
                 gamepad1.runRumbleEffect(readyToReleaseVibration);
-            } else if (Ilay.getDistance(DistanceUnit.CM) < 20  && Ilay.getDistance(DistanceUnit.CM) > 15 && elevatorLeft.getCurrentPosition() > minHightForJunctionIdentification) {
+            } else if (Ilay.getDistance(DistanceUnit.CM) < 20 && Ilay.getDistance(DistanceUnit.CM) > 15 && elevatorLeft.getCurrentPosition() > minHightForJunctionIdentification) {
                 closeToJunctionVibration = new Gamepad.RumbleEffect.Builder()
-                        .addStep((20 - Ilay.getDistance(DistanceUnit.CM))/5,0.0,100)
+                        .addStep((20 - Ilay.getDistance(DistanceUnit.CM)) / 5, 0.0, 100)
                         .build();
                 gamepad1.runRumbleEffect(closeToJunctionVibration);
-            }  else if (Ilay.getDistance(DistanceUnit.CM) < 5 && elevatorLeft.getCurrentPosition() > minHightForJunctionIdentification){
+            } else if (Ilay.getDistance(DistanceUnit.CM) < 5 && elevatorLeft.getCurrentPosition() > minHightForJunctionIdentification) {
                 closeToJunctionVibration = new Gamepad.RumbleEffect.Builder()
-                        .addStep(0.0,Ilay.getDistance(DistanceUnit.CM)/5,100)
+                        .addStep(0.0, Ilay.getDistance(DistanceUnit.CM) / 5, 100)
                         .build();
                 gamepad1.runRumbleEffect(closeToJunctionVibration);
             }
 
-            if(stopP.isPressed() && elevatorLeft.getCurrentPosition() < minHightForConeIdentification && !stopPIsPressed){
+            if (stopP.isPressed() && elevatorLeft.getCurrentPosition() < minHightForConeIdentification && !stopPIsPressed) {
                 stopPIsPressed = true;
                 PUMPR.setPower(0);
                 PUMPL.setPower(0);
-                if(elevatorLeft.getTargetPosition()<minHightForConeIdentification){
+                if (elevatorLeft.getTargetPosition() < minHightForConeIdentification) {
                     elevatorRight.setTargetPosition(150);
                     elevatorLeft.setTargetPosition(150);
                 }
@@ -351,14 +344,14 @@ public class Controller extends LinearOpMode {
                 elevatorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 elevatorRight.setPower(1);
                 elevatorLeft.setPower(1);
-            } else if(stopPIsPressed && !stopP.isPressed()) {
+            } else if (stopPIsPressed && !stopP.isPressed()) {
                 stopPIsPressed = false;
             }
 
             //these two ifs are responsible for deciding the height of the elevator
             // (dpad_up --> elevator up , dpad_down --> elevator reset to 0)
 
-            if(gamepad1.right_bumper && !BRIsPressed){
+            if (gamepad1.right_bumper && !BRIsPressed) {
                 BRIsPressed = true;
 //                if(elevatorRight.getCurrentPosition()<junctionsLevels[1])
 //                    setElevatorHeight(1);
@@ -368,11 +361,11 @@ public class Controller extends LinearOpMode {
                 targetHight++;
                 if (targetHight > 3) targetHight = 3;
                 setElevatorHeight(targetHight);
-            } else if(!gamepad1.right_bumper && BRIsPressed){
+            } else if (!gamepad1.right_bumper && BRIsPressed) {
                 BRIsPressed = false;
             }
 
-            if(gamepad1.left_bumper && !BLIsPressed){
+            if (gamepad1.left_bumper && !BLIsPressed) {
                 BLIsPressed = true;
 //                if(elevatorRight.getCurrentPosition()>junctionsLevels[3])
 //                    setElevatorHeight(3);
@@ -384,19 +377,19 @@ public class Controller extends LinearOpMode {
                 targetHight--;
                 if (targetHight <= 0) targetHight = 0;
                 setElevatorHeight(targetHight);
-            } else if(!gamepad1.left_bumper && BLIsPressed){
+            } else if (!gamepad1.left_bumper && BLIsPressed) {
                 BLIsPressed = false;
             }
 
 
             //to do max and min elevating
-            if(gamepad1.right_trigger > 0 && elevatorRight.getCurrentPosition()<maxElevatorHight){
+            if (gamepad1.right_trigger > 0 && elevatorRight.getCurrentPosition() < maxElevatorHight) {
                 rightTriggerWasPressed = true;
                 elevatorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 elevatorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 elevatorRight.setPower(gamepad1.right_trigger);
                 elevatorLeft.setPower(gamepad1.right_trigger);
-            }else if(rightTriggerWasPressed){
+            } else if (rightTriggerWasPressed) {
                 rightTriggerWasPressed = false;
                 elevatorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 elevatorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -407,22 +400,22 @@ public class Controller extends LinearOpMode {
                 elevatorRight.setPower(1);
                 elevatorLeft.setPower(1);
 
-                if(elevatorRight.getCurrentPosition()>junctionsLevels[2]+10)
+                if (elevatorRight.getCurrentPosition() > junctionsLevels[2] + 10)
                     targetHight = 3;
-                else if (elevatorRight.getCurrentPosition()>junctionsLevels[1]+10)
+                else if (elevatorRight.getCurrentPosition() > junctionsLevels[1] + 10)
                     targetHight = 2;
-                else if (elevatorRight.getCurrentPosition()>junctionsLevels[0]+10)
+                else if (elevatorRight.getCurrentPosition() > junctionsLevels[0] + 10)
                     targetHight = 1;
                 else targetHight = 0;
             }
 
-            if(gamepad1.left_trigger > 0 && elevatorRight.getCurrentPosition() > minElevatorHight){
+            if (gamepad1.left_trigger > 0 && elevatorRight.getCurrentPosition() > minElevatorHight) {
                 leftTriggerWasPressed = true;
                 elevatorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 elevatorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 elevatorRight.setPower(-gamepad1.left_trigger);
                 elevatorLeft.setPower(-gamepad1.left_trigger);
-            } else if(leftTriggerWasPressed){
+            } else if (leftTriggerWasPressed) {
                 leftTriggerWasPressed = false;
                 elevatorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 elevatorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -433,11 +426,11 @@ public class Controller extends LinearOpMode {
                 elevatorRight.setPower(1);
                 elevatorLeft.setPower(1);
 
-                if(elevatorRight.getCurrentPosition()>junctionsLevels[2]+10)
+                if (elevatorRight.getCurrentPosition() > junctionsLevels[2] + 10)
                     targetHight = 3;
-                else if (elevatorRight.getCurrentPosition()>junctionsLevels[1]+10)
+                else if (elevatorRight.getCurrentPosition() > junctionsLevels[1] + 10)
                     targetHight = 2;
-                else if (elevatorRight.getCurrentPosition()>junctionsLevels[0]+10)
+                else if (elevatorRight.getCurrentPosition() > junctionsLevels[0] + 10)
                     targetHight = 1;
                 else targetHight = 0;
             }
@@ -525,4 +518,4 @@ public class Controller extends LinearOpMode {
         elevatorRight.setPower(1);
         elevatorLeft.setPower(1);
     }
-}כ
+}

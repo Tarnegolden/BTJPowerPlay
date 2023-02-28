@@ -1,17 +1,16 @@
-package org.firstinspires.ftc.teamcode.olf;
+package org.firstinspires.ftc.teamcode.old;
 
 //import com.google.blocks.ftcrobotcontroller.runtime.DcMotorAccess;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.navigation.*;
 
 @Autonomous(name = "AutoFuncTest", group = "BLUE", preselectTeleOp = "Controller")
-//@Disabled
-
 public class AutoFuncTest extends LinearOpMode {
     BNO055IMU imu;
     Orientation lastAngles = new Orientation();
@@ -31,19 +30,19 @@ public class AutoFuncTest extends LinearOpMode {
 
     int tiles = 1200;
 
-    final int[] ConeStackHight = new int[]{0,100,200,300,400,500};
+    final int[] ConeStackHight = new int[]{0, 100, 200, 300, 400, 500};
     int coneInStack = 5;
 
     DcMotor elevatorRight;
     DcMotor elevatorLeft;
 
     int[][] junctionHight = new int[][]{
-            {0,1350,0,1350,0},
-            {1350,2150,2900,2150,1350},
-            {0,2900,0,2900,0},
-            {1350,2150,2900,2150,1350},
-            {0,1350,0,1350,0}};
-    int[] coneStackHight = new int[] {100,200,300,400};
+            {0, 1350, 0, 1350, 0},
+            {1350, 2150, 2900, 2150, 1350},
+            {0, 2900, 0, 2900, 0},
+            {1350, 2150, 2900, 2150, 1350},
+            {0, 1350, 0, 1350, 0}};
+    int[] coneStackHight = new int[]{100, 200, 300, 400};
     int currentConeInStack = 3;
 
     ColorSensor sleeveSensor;
@@ -128,7 +127,7 @@ public class AutoFuncTest extends LinearOpMode {
         waitForStart();
 
         setElevatorHight(200);
-        DriveHorisontaly(-600,0.2);
+        DriveHorisontaly(-600, 0.2);
         WaitForPosition();
 
         ScanForColor();
@@ -145,14 +144,14 @@ public class AutoFuncTest extends LinearOpMode {
 //        DriveVerticaly(-400,0.6);
 //        DriveHorisontaly(400,0.75);
 
-        if(sleeveColor == "blue") DriveVerticaly(1300,0.3);
-        if(sleeveColor == "red") DriveVerticaly(-1300,0.3);
+        if (sleeveColor == "blue") DriveVerticaly(1300, 0.3);
+        if (sleeveColor == "red") DriveVerticaly(-1300, 0.3);
         WaitForPosition();
         sleep(1000);
     }
     //driveByEncoder(0.5, 0, 100, 0);
 
-    public  void reset(){
+    public void reset() {
         motorBackRight.setTargetPosition(0);
         motorBackLeft.setTargetPosition(0);
         motorFrontRight.setTargetPosition(0);
@@ -168,7 +167,8 @@ public class AutoFuncTest extends LinearOpMode {
         motorBackRight.setPower(1);
         motorBackLeft.setPower(1);
     }
-    public void setElevatorHight(int ticks){
+
+    public void setElevatorHight(int ticks) {
         elevatorRight.setTargetPosition(ticks);
         elevatorLeft.setTargetPosition(ticks);
         elevatorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -176,19 +176,20 @@ public class AutoFuncTest extends LinearOpMode {
         elevatorRight.setPower(1);
         elevatorLeft.setPower(1);
     }
+
     public void WaitForElevatorPosition() {
-        while(!(elevatorRight.getCurrentPosition()<elevatorRight.getTargetPosition()+5 &&
-                elevatorRight.getCurrentPosition()>elevatorRight.getTargetPosition()-5 &&
-                elevatorLeft.getCurrentPosition()<elevatorLeft.getTargetPosition()+5 &&
-                elevatorLeft.getCurrentPosition()>elevatorLeft.getTargetPosition()-5));
+        while (!(elevatorRight.getCurrentPosition() < elevatorRight.getTargetPosition() + 5 &&
+                elevatorRight.getCurrentPosition() > elevatorRight.getTargetPosition() - 5 &&
+                elevatorLeft.getCurrentPosition() < elevatorLeft.getTargetPosition() + 5 &&
+                elevatorLeft.getCurrentPosition() > elevatorLeft.getTargetPosition() - 5)) ;
     }
 
     //drives
-    public void DriveVerticaly(int ticks ,double power){
-        motorBackRight.setTargetPosition(motorBackRight.getCurrentPosition()+ticks);
-        motorBackLeft.setTargetPosition(motorBackLeft.getCurrentPosition()+ticks);
-        motorFrontRight.setTargetPosition(motorFrontRight.getCurrentPosition()+ticks);
-        motorFrontLeft.setTargetPosition(motorFrontLeft.getCurrentPosition()+ticks);
+    public void DriveVerticaly(int ticks, double power) {
+        motorBackRight.setTargetPosition(motorBackRight.getCurrentPosition() + ticks);
+        motorBackLeft.setTargetPosition(motorBackLeft.getCurrentPosition() + ticks);
+        motorFrontRight.setTargetPosition(motorFrontRight.getCurrentPosition() + ticks);
+        motorFrontLeft.setTargetPosition(motorFrontLeft.getCurrentPosition() + ticks);
 
         motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -200,28 +201,13 @@ public class AutoFuncTest extends LinearOpMode {
         motorBackRight.setPower(power);
         motorBackLeft.setPower(power);
     }
-    public  void DriveHorisontaly(int ticks, double power){
 
-        motorBackRight.setTargetPosition(motorBackRight.getCurrentPosition()+ticks);
-        motorBackLeft.setTargetPosition(motorBackLeft.getCurrentPosition()-ticks);
-        motorFrontRight.setTargetPosition(motorFrontRight.getCurrentPosition()-ticks);
-        motorFrontLeft.setTargetPosition(motorFrontLeft.getCurrentPosition()+ticks);
+    public void DriveHorisontaly(int ticks, double power) {
 
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        motorFrontLeft.setPower(1);
-        motorFrontRight.setPower(1);
-        motorBackRight.setPower(1);
-        motorBackLeft.setPower(1);
-    }
-    public  void Turn(int ticks){
-        motorBackRight.setTargetPosition(motorBackRight.getCurrentPosition()+ticks);
-        motorBackLeft.setTargetPosition(motorBackLeft.getCurrentPosition()-ticks);
-        motorFrontRight.setTargetPosition(motorFrontRight.getCurrentPosition()+ticks);
-        motorFrontLeft.setTargetPosition(motorFrontLeft.getCurrentPosition()-ticks);
+        motorBackRight.setTargetPosition(motorBackRight.getCurrentPosition() + ticks);
+        motorBackLeft.setTargetPosition(motorBackLeft.getCurrentPosition() - ticks);
+        motorFrontRight.setTargetPosition(motorFrontRight.getCurrentPosition() - ticks);
+        motorFrontLeft.setTargetPosition(motorFrontLeft.getCurrentPosition() + ticks);
 
         motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -234,14 +220,31 @@ public class AutoFuncTest extends LinearOpMode {
         motorBackLeft.setPower(1);
     }
 
-    public void goToJunction(int x, int y){
-        if (firstJunction){
-            goToTheFirstJunction(x,y);
+    public void Turn(int ticks) {
+        motorBackRight.setTargetPosition(motorBackRight.getCurrentPosition() + ticks);
+        motorBackLeft.setTargetPosition(motorBackLeft.getCurrentPosition() - ticks);
+        motorFrontRight.setTargetPosition(motorFrontRight.getCurrentPosition() + ticks);
+        motorFrontLeft.setTargetPosition(motorFrontLeft.getCurrentPosition() - ticks);
+
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        motorFrontLeft.setPower(1);
+        motorFrontRight.setPower(1);
+        motorBackRight.setPower(1);
+        motorBackLeft.setPower(1);
+    }
+
+    public void goToJunction(int x, int y) {
+        if (firstJunction) {
+            goToTheFirstJunction(x, y);
             firstJunction = false;
-        }else{
-            DriveVerticaly(-x*tiles,1);
+        } else {
+            DriveVerticaly(-x * tiles, 1);
             WaitForPosition();
-            DriveHorisontaly((y-2)*tiles,1);
+            DriveHorisontaly((y - 2) * tiles, 1);
         }
         Turn(650);
         WaitForPosition();
@@ -267,12 +270,14 @@ public class AutoFuncTest extends LinearOpMode {
 
     }
 
-    public void ScanForColor(){
-        if(sleeveSensor.red() > sleeveSensor.green() && sleeveSensor.red() > sleeveSensor.blue()) {
+    public void ScanForColor() {
+        if (sleeveSensor.red() > sleeveSensor.green() && sleeveSensor.red() > sleeveSensor.blue()) {
             sleeveColor = "red";
-        }if(sleeveSensor.blue() > sleeveSensor.green() && sleeveSensor.blue() > sleeveSensor.red()){
+        }
+        if (sleeveSensor.blue() > sleeveSensor.green() && sleeveSensor.blue() > sleeveSensor.red()) {
             sleeveColor = "blue";
-        }if(sleeveSensor.green() > sleeveSensor.red() && sleeveSensor.green() > sleeveSensor.blue()){
+        }
+        if (sleeveSensor.green() > sleeveSensor.red() && sleeveSensor.green() > sleeveSensor.blue()) {
             sleeveColor = "green";
         }
         ScanForColor();
@@ -320,7 +325,7 @@ public class AutoFuncTest extends LinearOpMode {
 //        while (motorFrontRightEncoderIsNotFinished || motorBackRightEncoderIsNotFinished) {
         while (motorFrontRightEncoderIsNotFinished) {
 
-            drive(power, angleDegrees,angleAheadDegrees);
+            drive(power, angleDegrees, angleAheadDegrees);
             motorFrontRightEncoderIsNotFinished = Math.abs(motorFrontRight.getCurrentPosition()) < frontRightEncoder;
 //            rx = -(angleAheadDegrees - getCurrentAngleFromIMU()) * 0.01;
 //            denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
@@ -341,6 +346,7 @@ public class AutoFuncTest extends LinearOpMode {
         }
         stopRobot();
     }
+
     private void stopRobot() {
 //        motorFrontLeft.setPower(0);
 //        motorBackLeft.setPower(0);
@@ -355,9 +361,7 @@ public class AutoFuncTest extends LinearOpMode {
     }
 
 
-
-    private void stopOne(DcMotor motor)
-    {
+    private void stopOne(DcMotor motor) {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -365,21 +369,21 @@ public class AutoFuncTest extends LinearOpMode {
             }
         });
     }
+
     public void goToTheFirstJunction(int x, int y) {
 
 
-        telemetry.addData("Scaning...","");
+        telemetry.addData("Scaning...", "");
         telemetry.update();
 
 
-
-        DriveHorisontaly(-tiles*(y-1),1);
+        DriveHorisontaly(-tiles * (y - 1), 1);
         WaitForPosition();
 
         telemetry.addData("DH SECSSESFULL", "");
         telemetry.update();
 
-        DriveVerticaly(tiles*(x-1),1);
+        DriveVerticaly(tiles * (x - 1), 1);
         WaitForPosition();
 
         telemetry.addData("DH SECSSESFULL", "");
@@ -401,7 +405,6 @@ public class AutoFuncTest extends LinearOpMode {
         motorFrontRight.setPower(power);
 
 
-
         motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -415,7 +418,7 @@ public class AutoFuncTest extends LinearOpMode {
         PUMPL.setPower(1);
         PUMPR.setPower(-1);
 
-        sleep (1500);
+        sleep(1500);
 
         PUMPL.setPower(0);
         PUMPR.setPower(0);
@@ -433,8 +436,6 @@ public class AutoFuncTest extends LinearOpMode {
         motorFrontRight.setPower(power);
 
 
-
-
         stopRobot();
         motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -446,16 +447,18 @@ public class AutoFuncTest extends LinearOpMode {
     }
 
     public void WaitForPosition() {
-        while (!((motorBackRight.getCurrentPosition() < motorBackRight.getTargetPosition()+5 &&
-                motorBackRight.getCurrentPosition() > motorBackRight.getTargetPosition()-5) ||
-                (motorBackLeft.getCurrentPosition() < motorBackLeft.getTargetPosition()+5 &&
-                        motorBackLeft.getCurrentPosition() > motorBackLeft.getTargetPosition()-5) ||
-                (motorFrontRight.getCurrentPosition() < motorFrontRight.getTargetPosition()+5 &&
-                        motorFrontRight.getCurrentPosition() > motorFrontRight.getTargetPosition()-5) ||
-                (motorFrontLeft.getCurrentPosition() < motorFrontLeft.getTargetPosition()+5 &&
-                        motorFrontLeft.getCurrentPosition() > motorFrontLeft.getTargetPosition()-5) ));
+        while (!((motorBackRight.getCurrentPosition() < motorBackRight.getTargetPosition() + 5 &&
+                motorBackRight.getCurrentPosition() > motorBackRight.getTargetPosition() - 5) ||
+                (motorBackLeft.getCurrentPosition() < motorBackLeft.getTargetPosition() + 5 &&
+                        motorBackLeft.getCurrentPosition() > motorBackLeft.getTargetPosition() - 5) ||
+                (motorFrontRight.getCurrentPosition() < motorFrontRight.getTargetPosition() + 5 &&
+                        motorFrontRight.getCurrentPosition() > motorFrontRight.getTargetPosition() - 5) ||
+                (motorFrontLeft.getCurrentPosition() < motorFrontLeft.getTargetPosition() + 5 &&
+                        motorFrontLeft.getCurrentPosition() > motorFrontLeft.getTargetPosition() - 5)))
+            ;
         stopRobot();
     }
+
     private void FindTape(double power) {
         motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -467,7 +470,7 @@ public class AutoFuncTest extends LinearOpMode {
         motorFrontLeft.setPower(power);
         motorFrontRight.setPower(power);
 
-        while (!(tapeSensor.red() > tapeSensor.blue() && tapeSensor.red() > tapeSensor.green()));
+        while (!(tapeSensor.red() > tapeSensor.blue() && tapeSensor.red() > tapeSensor.green())) ;
 
         motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -525,16 +528,16 @@ public class AutoFuncTest extends LinearOpMode {
         motorBackRight.setPower(backRightPower);
     }
 
-    public void DriveToJunction(int x, int y){
-        DriveVerticaly(-x  * tiles, 0.75);
+    public void DriveToJunction(int x, int y) {
+        DriveVerticaly(-x * tiles, 0.75);
         WaitForPosition();
-        DriveHorisontaly((y-1) * tiles, 0.75);
+        DriveHorisontaly((y - 1) * tiles, 0.75);
         WaitForPosition();
 
         Turn(-1200);
         setElevatorHight(junctionHight[x][y]);
         WaitForPosition();
-        DriveVerticaly(200,0.75);
+        DriveVerticaly(200, 0.75);
         WaitForPosition();
 
         PUMPR.setPower(1);
@@ -543,15 +546,15 @@ public class AutoFuncTest extends LinearOpMode {
         PUMPR.setPower(0);
         PUMPL.setPower(0);
 
-        DriveVerticaly(-200,0.75);
+        DriveVerticaly(-200, 0.75);
         setElevatorHight(0);
         WaitForPosition();
         Turn(1200);
         WaitForPosition();
 
-        DriveHorisontaly((y-1) * -tiles,0.75);
+        DriveHorisontaly((y - 1) * -tiles, 0.75);
         WaitForPosition();
-        DriveVerticaly(x * tiles,0.75);
+        DriveVerticaly(x * tiles, 0.75);
     }
 
 }
