@@ -21,13 +21,15 @@ public class Trajectories {
         this.drive = drive;
 
         goToDetectionBL = drive.trajectoryBuilder(new Pose2d(35, 62.5, 0))
-                .strafeRight(12.5)
+//                .strafeRight(12.5)
+//                .strafeLeft(12.5)
+                .lineToConstantHeading(new Vector2d(35, 50))
                 .build();
 
         dropBL = drive.trajectoryBuilder(blDrop)
-                .back(5.5)
+                .splineToConstantHeading(new Vector2d(29.5, 0), 0)
                 .addDisplacementMarker(systems.pumpSystem::autoDrop)
-                .forward(5.5)
+                .splineToConstantHeading(new Vector2d(35, 0), 0)
                 .build();
     }
 
@@ -35,19 +37,19 @@ public class Trajectories {
         PumpSystem pumpSystem = systems.pumpSystem;
         ElevatorSystem elevatorSystem = systems.elevatorSystem;
 
-        TrajectorySequenceBuilder build = drive.trajectorySequenceBuilder(new Pose2d(35, 50, 0))
-                .addDisplacementMarker(pumpSystem::flip)
-                .strafeRight(50)
+        TrajectorySequenceBuilder build = drive.trajectorySequenceBuilder(new Pose2d(35, 80, 0))
+//        TrajectorySequenceBuilder build = drive.trajectorySequenceBuilder(goToDetectionBL.end())
                 .addDisplacementMarker(() -> elevatorSystem.goTo(ElevatorSystem.Level.HIGH))
+//                .addDisplacementMarker(pumpSystem::flip)
+//                .strafeRight(50)
+//                .strafeLeft(50)
+                .lineToConstantHeading(new Vector2d(35, 0))
                 .addTrajectory(dropBL);
 
         for (int i = 0; i < 5; i++) {
             build.addTrajectory(makeLoopBL(stackHeights[i])).addTrajectory(dropBL);
         }
-        new Thread(() -> {
-            elevatorSystem.goTo(ElevatorSystem.Level.GROUND);
-            pumpSystem.flip();
-        }).start();
+        build.addDisplacementMarker(() -> elevatorSystem.goTo(ElevatorSystem.Level.GROUND));
 
         switch (signal) {
             case ONE:
@@ -70,14 +72,16 @@ public class Trajectories {
         return drive.trajectoryBuilder(blDrop)
                 .addDisplacementMarker(() -> elevatorSystem.goTo(i))
                 .addDisplacementMarker(pumpSystem::flip)
-                .strafeLeft(12)
-                .forward(27.5)
-                .addDisplacementMarker(35, () -> new Thread(() -> {
-                    pumpSystem.collect();
-                    elevatorSystem.goTo(ElevatorSystem.Level.HIGH);
-                }).start())
-                .back(27.5)
-                .strafeRight(12)
+                .lineTo(new Vector2d(35, 30))
+                .splineTo(new Vector2d(60, 30), 0)
+//                .strafeLeft(12)
+//                .forward(27.5)
+                .addDisplacementMarker(pumpSystem::collect)
+                .addDisplacementMarker(() -> elevatorSystem.goTo(ElevatorSystem.Level.HIGH))
+                .splineTo(new Vector2d(35, 30), 0)
+                .splineTo(new Vector2d(35, 0), 0)
+//                .back(27.5)
+//                .strafeRight(12)
                 .addDisplacementMarker(pumpSystem::flip)
                 .build();
     }

@@ -8,8 +8,8 @@ public class Systems {
     public ElevatorSystem elevatorSystem;
 
     public Systems(LinearOpMode opMode) {
-        pumpSystem = new PumpSystem(opMode);
         detectionSystem = new DetectionSystem(opMode);
         elevatorSystem = new ElevatorSystem(opMode);
+        pumpSystem = new PumpSystem(opMode, elevatorSystem);
     }
 }

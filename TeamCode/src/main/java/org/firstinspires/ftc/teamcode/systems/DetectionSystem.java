@@ -5,16 +5,22 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 
 public class DetectionSystem {
     ColorSensor sleeveSensor;
+    LinearOpMode opMode;
 
     public enum Signal {
         ONE, TWO, THREE
     }
 
     public DetectionSystem(LinearOpMode opMode) {
+        this.opMode = opMode;
         sleeveSensor = opMode.hardwareMap.get(ColorSensor.class, "colorSensorLeft");
     }
 
     public Signal scan() {
+        if (opMode.isStopRequested()) {
+            opMode.stop();
+            return null;
+        }
         if (sleeveSensor.red() > sleeveSensor.green() && sleeveSensor.red() > sleeveSensor.blue()) {
             return Signal.ONE;
         } else if (sleeveSensor.green() > sleeveSensor.red() && sleeveSensor.green() > sleeveSensor.blue()) {

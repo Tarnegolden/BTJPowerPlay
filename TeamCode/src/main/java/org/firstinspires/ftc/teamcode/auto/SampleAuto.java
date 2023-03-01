@@ -5,10 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.systems.DetectionSystem;
+import org.firstinspires.ftc.teamcode.systems.ElevatorSystem;
 import org.firstinspires.ftc.teamcode.systems.Systems;
 import org.firstinspires.ftc.teamcode.systems.Trajectories;
 
-@TeleOp(name = "Sample Auto")
+@TeleOp(name = "Sample Auto", group = "Test")
 public class SampleAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
@@ -20,13 +21,17 @@ public class SampleAuto extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        drive.followTrajectory(trajectories.goToDetectionBL);
-        DetectionSystem.Signal s = systems.detectionSystem.scan();
-        telemetry.addData("Signal: ", s);
-        telemetry.update();
+//        systems.elevatorSystem.goTo(ElevatorSystem.Level.HIGH);
 
-        drive.followTrajectorySequence(trajectories.getFullTrajectoryBL(s));
+//        drive.followTrajectory(trajectories.goToDetectionBL);
+//        DetectionSystem.Signal s = systems.detectionSystem.scan();
+//        telemetry.addData("Signal: ", s);
+//        telemetry.update();
+
+        drive.followTrajectorySequence(trajectories.getFullTrajectoryBL(DetectionSystem.Signal.ONE));
         telemetry.addData("Time: ", time);
         telemetry.update();
+
+        while (opModeIsActive());
     }
 }

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp(name = "SingleController", group = "BTJ")
+@TeleOp(name = "Single Controller TeleOp", group = "BTJ")
 public class Controller extends LinearOpMode {
 
     //Controller ***************************************************************

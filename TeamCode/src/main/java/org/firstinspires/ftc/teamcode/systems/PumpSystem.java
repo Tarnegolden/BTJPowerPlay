@@ -17,6 +17,7 @@ public class PumpSystem {
     private Direction direction;
     private GrabbingState grabbingState;
     private LinearOpMode opMode;
+    private ElevatorSystem elevatorSystem;
 
     private enum Direction {
         FORWARD, BACKWARD
@@ -28,6 +29,7 @@ public class PumpSystem {
 
     public PumpSystem(LinearOpMode opMode) {
         this.opMode = opMode;
+        this.elevatorSystem = new ElevatorSystem(opMode);
         stopPump = opMode.hardwareMap.get(TouchSensor.class, "stopPump");
         pumpR = opMode.hardwareMap.get(CRServo.class, "pr");
         pumpL = opMode.hardwareMap.get(CRServo.class, "pl");
@@ -36,22 +38,45 @@ public class PumpSystem {
         pumpDCL = opMode.hardwareMap.get(Servo.class, "sideLeft");
 
         pumpR.setDirection(DcMotorSimple.Direction.REVERSE);
-        setForward();
+//        setForward();
+        direction = Direction.FORWARD;
+        stop();
+    }
+
+    public PumpSystem(LinearOpMode opMode, ElevatorSystem elevatorSystem) {
+        this.opMode = opMode;
+        this.elevatorSystem = elevatorSystem;
+        stopPump = opMode.hardwareMap.get(TouchSensor.class, "stopPump");
+        pumpR = opMode.hardwareMap.get(CRServo.class, "pr");
+        pumpL = opMode.hardwareMap.get(CRServo.class, "pl");
+        flipPump = opMode.hardwareMap.get(Servo.class, "rotatePump");
+        pumpDCR = opMode.hardwareMap.get(Servo.class, "sideRight");
+        pumpDCL = opMode.hardwareMap.get(Servo.class, "sideLeft");
+
+        pumpR.setDirection(DcMotorSimple.Direction.REVERSE);
+//        setForward();
+        direction = Direction.FORWARD;
         stop();
     }
 
     public void setForward() {
-        flipPump.setPosition(0);
-        pumpDCR.setPosition(1);
-        pumpDCL.setPosition(0);
-        direction = Direction.FORWARD;
+        new Thread(() -> {
+            flipPump.setPosition(0.85);
+            opMode.sleep(350);
+            pumpDCR.setPosition(1);
+            pumpDCL.setPosition(0);
+            direction = Direction.FORWARD;
+        }).start();
     }
 
-    private void setBackward() {
-        flipPump.setPosition(0.85);
-        pumpDCR.setPosition(0);
-        pumpDCL.setPosition(1);
-        direction = Direction.BACKWARD;
+    public void setBackward() {
+        new Thread(() -> {
+            flipPump.setPosition(0);
+            opMode.sleep(350);
+            pumpDCR.setPosition(0);
+            pumpDCL.setPosition(1);
+            direction = Direction.BACKWARD;
+        }).start();
     }
 
     public void flip() {
@@ -96,23 +121,32 @@ public class PumpSystem {
         }
     }
 
-    @Deprecated
     public boolean isPressed() {
         return stopPump.isPressed();
     }
 
     public void collect() {
-        grab();
-        while (opMode.opModeIsActive() && !stopPump.isPressed()) {}
-        stop();
+        new Thread(() -> {
+//            while (opMode.opModeIsActive() && elevatorSystem.getCurrentPosition() != elevatorSystem.getTargetPosition()) {}
+            ElapsedTime time = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+            grab();
+            time.reset();
+            time.startTime();
+//        while (opMode.opModeIsActive() && !isPressed()) {}
+            while (opMode.opModeIsActive() && time.time() < 500) {}
+            stop();
+        }).start();
     }
 
     public void autoDrop() {
-        ElapsedTime time = new ElapsedTime();
-        drop();
-        time.reset();
-        time.startTime();
-        while (opMode.opModeIsActive() && time.time() < 0.5) {}
-        stop();
+        new Thread(() -> {
+//            while (opMode.opModeIsActive() && elevatorSystem.getCurrentPosition() != elevatorSystem.getTargetPosition()) {}
+            ElapsedTime time = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+            drop();
+            time.reset();
+            time.startTime();
+            while (opMode.opModeIsActive() && time.time() < 500) {}
+            stop();
+        }).start();
     }
 }

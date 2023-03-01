@@ -50,4 +50,12 @@ public class ElevatorSystem {
                 goTo(0);
         }
     }
+
+    public int getCurrentPosition() {
+        return elevatorLeft.getCurrentPosition();
+    }
+
+    public int getTargetPosition() {
+        return elevatorLeft.getTargetPosition();
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.meepmeeptest;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -16,9 +17,27 @@ public class MeepMeepTest {
 
         RoadRunnerBotEntity myBot = botBuilder.followTrajectorySequence(drivee ->
                         drivee.trajectorySequenceBuilder(new Pose2d(35, 62.5, 0))
-                                .strafeRight(12.5)
-                                .waitSeconds(1)
-                                .strafeRight(50)
+                                .lineToConstantHeading(new Vector2d(35, 50))
+//                                .strafeRight(12.5)
+                                .lineToConstantHeading(new Vector2d(35, 0))
+//                                .strafeRight(50)
+                                .splineToConstantHeading(new Vector2d(29.5, 0), 0)
+                                .waitSeconds(0.5)
+                                .splineToConstantHeading(new Vector2d(35, 0), 0)
+                                .waitSeconds(0.5)
+                                .lineToConstantHeading(new Vector2d(35,12))
+                                .splineToConstantHeading(new Vector2d(62.5, 12), 0)
+//                                .strafeLeft(12)
+//                                .forward(27.5)
+                                .waitSeconds(0.5)
+                                .splineToConstantHeading(new Vector2d(35,12), 0)
+                                .splineToConstantHeading(new Vector2d(35,0), 0)
+//                                .back(27.5)
+//                                .strafeRight(12)
+
+//                                .strafeRight(12.5)
+//                                .waitSeconds(1)
+//                                .strafeRight(50)
 //                                .strafeRight(62.5)
 //                                .back(5.5)
 //                                .forward(5.5)
