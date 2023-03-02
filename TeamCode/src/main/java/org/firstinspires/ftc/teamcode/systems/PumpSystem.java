@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.systems;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -16,8 +17,9 @@ public class PumpSystem {
     private final Servo pumpDCL;
     private Direction direction;
     private GrabbingState grabbingState;
-    private LinearOpMode opMode;
-    private ElevatorSystem elevatorSystem;
+    private final LinearOpMode opMode;
+    private final ElevatorSystem elevatorSystem;
+    private final Systems systems;
 
     private enum Direction {
         FORWARD, BACKWARD
@@ -30,6 +32,7 @@ public class PumpSystem {
     public PumpSystem(LinearOpMode opMode) {
         this.opMode = opMode;
         this.elevatorSystem = new ElevatorSystem(opMode);
+        this.systems = new Systems(opMode);
         stopPump = opMode.hardwareMap.get(TouchSensor.class, "stopPump");
         pumpR = opMode.hardwareMap.get(CRServo.class, "pr");
         pumpL = opMode.hardwareMap.get(CRServo.class, "pl");
@@ -43,9 +46,10 @@ public class PumpSystem {
         stop();
     }
 
-    public PumpSystem(LinearOpMode opMode, ElevatorSystem elevatorSystem) {
+    public PumpSystem(LinearOpMode opMode, Systems systems) {
         this.opMode = opMode;
-        this.elevatorSystem = elevatorSystem;
+        this.elevatorSystem = systems.elevatorSystem;
+        this.systems = systems;
         stopPump = opMode.hardwareMap.get(TouchSensor.class, "stopPump");
         pumpR = opMode.hardwareMap.get(CRServo.class, "pr");
         pumpL = opMode.hardwareMap.get(CRServo.class, "pl");
@@ -126,16 +130,18 @@ public class PumpSystem {
     }
 
     public void collect() {
-        new Thread(() -> {
-//            while (opMode.opModeIsActive() && elevatorSystem.getCurrentPosition() != elevatorSystem.getTargetPosition()) {}
-            ElapsedTime time = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-            grab();
-            time.reset();
-            time.startTime();
-//        while (opMode.opModeIsActive() && !isPressed()) {}
-            while (opMode.opModeIsActive() && time.time() < 500) {}
-            stop();
-        }).start();
+        grab();
+//        ElapsedTime time = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+//        time.reset();
+//        time.startTime();
+//        while (opMode.opModeIsActive() && time.time() < 500) {
+//            systems.drive.setDrivePower(new Pose2d(0, 0.2));
+//        }
+        while (opMode.opModeIsActive() && !isPressed()) {
+            systems.drive.setDrivePower(new Pose2d(0, 0.2));
+        }
+        systems.drive.setDrivePower(new Pose2d());
+        stop();
     }
 
     public void autoDrop() {
@@ -145,7 +151,8 @@ public class PumpSystem {
             drop();
             time.reset();
             time.startTime();
-            while (opMode.opModeIsActive() && time.time() < 500) {}
+            while (opMode.opModeIsActive() && time.time() < 500) {
+            }
             stop();
         }).start();
     }
